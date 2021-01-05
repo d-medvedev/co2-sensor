@@ -18,20 +18,13 @@
 #define ADC_VALUE_MAX       pow(2, ADC_BIT)
 #include <math.h>
 
+const char *ssid =  "Medvedev";  // Имя вайфай точки доступа
+const char *pass =  "d9628de2ec6b"; // Пароль от точки доступа
 
-//#include <DallasTemperature.h>
-//
-//#define ONE_WIRE_BUS 2
-//OneWire oneWire(ONE_WIRE_BUS);
-//DallasTemperature sensors(&oneWire);
-
-const char *ssid =  "KODE";  // Имя вайфай точки доступа
-const char *pass =  "a1b2c3d4e5"; // Пароль от точки доступа
-
-const char *mqtt_server = "mqtt.lividash.kode-t.ru"; // Имя сервера MQTT
-const int  mqtt_port = 1884; // Порт для подключения к серверу MQTT
-const char *mqtt_user = "device_light_noise"; // Логин от сервер
-const char *mqtt_pass = "d6Vr3VdxJVZ36Bnf"; // Пароль от сервера
+const char *mqtt_server = "demo.thingsboard.io"; // Имя сервера MQTT
+const int  mqtt_port = 1883; // Порт для подключения к серверу MQTT
+const char *mqtt_user = "NxPPLqTAeH4OaE8Frgwe"; // Логин от сервер
+const char *mqtt_pass = ""; // Пароль от сервера
 
 #define BUFFER_SIZE 100
 #define ADC_SEL 15
@@ -69,15 +62,19 @@ void setup() {
   
   Serial.begin(115200);
   
-//  Wire.begin();
-//
-//  if (airSensor.begin() == false)
-//  {
-//    Serial.println("Air sensor not detected. Please check wiring. Freezing...");
-//    while (1)
-//      ;
-//  }
-  
+  Wire.begin();
+
+  if (airSensor.begin() == false)
+  {
+    Serial.println("Air sensor not detected. Please check wiring. Freezing...");
+  }
+  else
+    Serial.println("Air sensor detected");
+
+  Serial.println();
+  Serial.print("MAC: ");
+  Serial.println(WiFi.macAddress());
+   
   delay(10);
   Serial.println();
   Serial.println();
@@ -184,27 +181,27 @@ void loop() {
 
   noise = getNoiseDb();
 
-//  if (airSensor.dataAvailable())
-//  {
-//    co2 = airSensor.getCO2(); 
-//    Serial.print("co2(ppm):");
-//    Serial.print(co2);
-//
-//    temp = airSensor.getTemperature();
-//    Serial.print(" temp(C):");
-//    Serial.print(temp, 1);
-//
-//    humid = airSensor.getHumidity();
-//    Serial.print(" humidity(%):");
-//    Serial.print(humid, 1);
-//
-//    Serial.println();
-//  }
-//  else
-//    Serial.println("Waiting for new data");
+  if (airSensor.dataAvailable())
+  {
+    co2 = airSensor.getCO2(); 
+    //Serial.print("co2(ppm):");
+    //Serial.print(co2);
+
+    temp = airSensor.getTemperature();
+    //Serial.print(" temp(C):");
+    //Serial.print(temp, 1);
+
+    humid = airSensor.getHumidity();
+    //Serial.print(" humidity(%):");
+    //Serial.print(humid, 1);
+
+    //Serial.println();
+  }
+  else
+    Serial.println("Waiting for new data");
 
   
-  delay(500);
+  delay(3000);
   
 } // конец основного цикла
 
@@ -215,18 +212,16 @@ void TempSend(){
   {
     //sensors.requestTemperatures();   // от датчика получаем значение температуры
     char buf[100];
-    sprintf(buf,"{\"ID\":\"A0B1C2D3E4F5\",\"Lux\":\"%4.2f\",\"Noise\":\"%d\",\"CO2\":\"%d\",\"Temperature\":\"%4.2f\",\"Humidity\":\"%4.2f\"}",light_lux,noise,co2,temp,humid);
-    client.publish("v1/devices/light_noise",buf); // отправляем в топик значение освещенности
+    sprintf(buf,"{\"ID\":\"A0B1C2D3E4F5\",\"Lux\":\"%4.2f\",\"CO2\":\"%d\",\"Temperature\":\"%4.2f\",\"Humidity\":\"%4.2f\"}",light_lux,co2,temp,humid);
+    client.publish("v1/devices/me/telemetry",buf); // отправляем в топик значение освещенности
     Serial.println("Sent data!");
     Serial.print(light_lux);
     Serial.print("  ");
-    Serial.println(noise);
-//    Serial.print("  ");
-//    Serial.print(co2);
-//    Serial.print("  ");
-//    Serial.print(temp);
-//    Serial.print("  ");
-//    Serial.print(humid);
+    Serial.print(co2);
+    Serial.print("  ");
+    Serial.print(temp);
+    Serial.print("  ");
+    Serial.println(humid);
 
     tm = SEND_INTERVAL;  // пауза между отправками значений температуры  коло 3 секунд
   }
