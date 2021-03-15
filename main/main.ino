@@ -1,3 +1,6 @@
+#include <MQTT.h>
+#include <MQTTClient.h>
+
 #include <SparkFun_SCD30_Arduino_Library.h>
 #include <Wire.h>
 #include <pins_arduino.h>

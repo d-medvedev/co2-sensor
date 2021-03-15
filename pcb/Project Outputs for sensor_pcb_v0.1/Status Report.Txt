@@ -1,0 +1,13 @@
+Output: Gerber X2 Files
+Type  : GerberX2
+From  : Project [sensor_pcb_v0.1.PrjPcb]
+   Generated File[pcb cover_Keep-out.gbr]
+   Generated File[pcb cover.RUL]
+   Generated File[pcb cover.EXTREP]
+   Generated File[pcb cover.REP]
+
+
+Files Generated   : 4
+Documents Printed : 0
+
+Finished Output Generation At 21:54:51 On 02.03.2021

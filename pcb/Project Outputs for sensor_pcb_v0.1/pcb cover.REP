@@ -1,0 +1,14 @@
+*************************************************************
+FileName = pcb cover.GBR
+AutoAperture = True
+*************************************************************
+Generating : Keep-Out Layer
+      File : pcb cover_Keep-out.gbr
+
+    Adding Layer      : Keep-Out Layer
+
+
+Used DCodes :
+    D10
+*************************************************************
+
